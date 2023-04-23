@@ -1,62 +1,11 @@
-mtype = {P1, P2};
-
-active proctype proceso1()
+active [2] proctype proceso()
 {
+    byte turno = 0;
     do
-    :: true ->
-        /* Sección no crítica */
-        printf("Proceso 1 está en la sección no crítica.\n");
-
-        /* Entrada a la región crítica */
-        atomic {
-            /* Sección crítica */
-            printf("Proceso 1 está en la sección crítica.\n");
-
-            /* Simular acceso a un recurso compartido (archivo) */
-            printf("Proceso 1 está accediendo a un archivo.\n");
-            /* Hacer una pausa para simular acceso al archivo */
-            /* ... */
-
-            /* Salida de la región crítica */
-            printf("Proceso 1 salió de la sección crítica.\n");
-        }
-
-        /* Sección no crítica */
-        printf("Proceso 1 salió de la sección no crítica.\n");
-
-        /* Hacer una pausa antes de volver a la sección crítica */
+    :: turno == _pid ->
+        printf("Proceso %d está en la sección crítica.\n", _pid);
+        /* Hacer una pausa para simular acceso al recurso */
         /* ... */
-    od
-}
-
-active proctype proceso2()
-{
-    do
-    :: true ->
-        /* Sección no crítica */
-        printf("Proceso 2 está en la sección no crítica.\n");
-
-        /* Esperar antes de intentar acceder al recurso */
-        /* ... */
-
-        /* Entrada a la región crítica */
-        atomic {
-            /* Sección crítica */
-            printf("Proceso 2 está en la sección crítica.\n");
-
-            /* Simular acceso a un recurso compartido (archivo) */
-            printf("Proceso 2 está accediendo a un archivo.\n");
-            /* Hacer una pausa para simular acceso al archivo */
-            /* ... */
-
-            /* Salida de la región crítica */
-            printf("Proceso 2 salió de la sección crítica.\n");
-        }
-
-        /* Sección no crítica */
-        printf("Proceso 2 salió de la sección no crítica.\n");
-
-        /* Hacer una pausa antes de volver a la sección crítica */
-        /* ... */
+        turno = (_pid + 1) % 2;
     od
 }
